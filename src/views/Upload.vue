@@ -1,0 +1,301 @@
+<template lang="pug">
+.uploadWindow
+    .wrap
+        .title Upload
+        form#uploadForm(@submit.prevent="upload")
+            .input.required
+                label(for="title") Title
+                input#title(type="text" name="title" placeholder="Title" @input="e=> { form.title = e.target.value; }" required)
+            .input.required
+                label(for="artist") Artist
+                input#artist(type="text" name="artist" placeholder="Artist" @input="e=> { form.artist = e.target.value; }" required)
+            .inputFile.required
+                .tit Cover
+                p {{ uploadFileName || "Upload a file"}}
+                label(for="cover") Click
+                input#cover(hidden type="file" name="cover" ref="uploadFile" @change="readURL")
+            .previewFile(ref="previewFile")
+                img#preview(ref="preview")
+            .input.lyrics(:class="{'required' : form.lyrics}")
+                label(for="lyrics") Lyrics
+                textarea#lyrics(type="text" name="lyrics" placeholder="Lyrics" @input="e=> { form.lyrics = e.target.value; }" @keydown="resizeTextarea")
+            .input(:class="{'required' : form.year}")
+                label(for="year") Year
+                input#year(type="number" placeholder="Year" v-model='year')
+                //- .controlBtn
+                //-     .btn.minus
+                //-     .btn.plus
+            .input(:class="{'required' : form.track}")
+                label(for="track") Track
+                input#track(type="text" name="track" placeholder="Track" @input="e=> { form.track = e.target.value; }")
+            .input(:class="{'required' : form.tag}")
+                label(for="tag") Tag
+                input#tag(type="text" placeholder="separate with a comma(,)" pattern="[a-zA-Z0-9 ,]+" v-model='tagsInput')
+            input.submit(type="submit" value="Upload")
+</template>
+
+<script setup>
+import { skapi, account } from '@/main';
+import { useRoute, useRouter } from 'vue-router';
+import { reactive, ref } from 'vue';
+
+let route = useRoute();
+let router = useRouter();
+let form = reactive({
+    title: '',
+    artist: '',
+    track: '',
+})
+let uploadFileName = ref('');
+let uploadFile = ref(null);
+let previewFile = ref(null);
+let preview = ref(null);
+let year = ref('');
+let tagsInput = ref('');
+let promiseRunning = ref(false);
+
+let resizeTextarea = (e) => {
+    e.target.style.height = '1px';
+    e.target.style.height = (12 + e.target.scrollHeight) + 'px';
+}
+let readURL = () => {
+    if (uploadFile.value.files.length > 0) {
+        uploadFileName.value = uploadFile.value.files[0].name;
+
+        let reader = new FileReader();
+        
+        reader.onload = (e) => {
+            console.log(e.target.result);
+            preview.value.src = e.target.result;
+        };
+        reader.readAsDataURL(uploadFile.value.files[0]);
+    }
+}
+let upload = (e) => {
+    promiseRunning.value = true;
+
+    let data = {
+        title: form.title,
+        artist: form.artist,
+        track: form.track,
+    }
+
+    let config = {
+        table: {
+            name: 'Album',
+            access_group: 'authorized'
+        }
+    }
+
+    if(tagsInput.value) {
+        config.tags = tagsInput.value.split(',').map(t => t.trim());
+    } else if(year.value) {
+        // config.index.name = 'year';
+        // config.index.value = year.value;
+        config.index = {
+            name: 'year',
+            value: year.value
+        }
+    }
+    skapi.postRecord(e, config).then(r=>{
+        console.log(r)
+        router.push({ path: '/' });
+    });
+}
+</script>
+
+<style lang="less" scoped>
+.uploadWindow {
+    height: 100vh;
+    margin: 0 auto;
+    display: table;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(30px);
+    z-index: 99999;
+}
+
+.wrap {
+    display: table-cell;
+    vertical-align: middle;
+    width: 400px;
+    // text-align: center;
+    color: #fff;
+}
+
+.title {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+#uploadForm {
+    margin-bottom: 20px;
+
+    .input {
+        position: relative;
+        width: 100%;
+
+        &.required {
+            label, .tit {
+                opacity: 1;
+            }
+        }
+
+        &.lyrics {
+            label {
+                display: block;
+                margin-bottom: 10px;
+            }
+
+            textarea {
+                width: 100%;
+                display: block;
+                resize: none;
+                padding: 8px;
+                border-radius: 8px;
+                border: 0;
+                background-color: rgba(255, 255, 255, 0.1);
+                margin-bottom: 10px;
+                color: #fff;
+            }
+        }
+    }
+
+    label,
+    .tit {
+        display: inline-block;
+        width: 80px;
+        opacity: 0.5;
+    }
+
+    input,
+    p {
+        display: inline-block;
+        padding: 8px;
+        border-radius: 8px;
+        width: calc(100% - 80px);
+        // border: 1px solid rgba(255,255,255,0.3);
+        border: 0;
+        background-color: rgba(255, 255, 255, 0.1);
+        margin-bottom: 10px;
+        color: #fff;
+
+        &.submit {
+            width: 100%;
+            font-size: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: unset;
+            transition: all 0.3s;
+            cursor: pointer;
+
+            &:hover {
+                border: 1px solid rgba(0, 0, 0, 0.2);
+                background-color: rgba(255, 255, 255, 0.3);
+                color: #000;
+            }
+        }
+    }
+
+    .controlBtn {
+        position: absolute;
+        top: 18px;
+        right: 20px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .btn {
+            position: relative;
+            text-align: center;
+            font-size: 20px;
+            
+            &::before {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                width: 30px;
+                height: 25px;
+                background-color: #000;
+                border-radius: 10px;
+                transition: all 0.3s;
+                opacity: 0.5;
+                cursor: pointer;
+                z-index: -1;
+            }
+            &:first-child {
+                &::before {
+                    content: '-';
+                }
+            }
+            &:last-child {
+                &::before {
+                    content: '+';
+                }
+            }
+            &:hover {
+                &::before {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    .inputFile {
+        position: relative;
+        margin-bottom: 10px;
+
+        &.required {
+            .tit {
+                opacity: 1;
+            }
+        }
+
+        .tit {
+            opacity: 0.5;
+        }
+
+        p {
+            margin: 0;
+            padding-right: 80px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        label {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 65px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+            cursor: pointer;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        input {
+            display: none;
+        }
+    }
+
+    .previewFile {
+        width: 400px;
+        height: 400px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        margin-bottom: 10px;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+        }
+    }
+}</style>
