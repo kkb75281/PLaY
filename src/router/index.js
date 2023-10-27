@@ -3,6 +3,7 @@ import Main from '@/views/Main.vue'
 import Upload from '@/views/upload.vue'
 import List from '@/views/List.vue'
 import MyPage from '@/views/MyPage.vue'
+import Welcome from '@/views/Welcome.vue'
 import Login from '@/components/login.vue'
 import Signup from '@/components/signup.vue'
 
@@ -38,6 +39,11 @@ const router = createRouter({
       path: '/mypage',
       name: 'mypage',
       component: MyPage
+    },
+    {
+        path: '/welcome',
+        name: 'welcome',
+        component: Welcome
     },
     {
       // path: '/about',
