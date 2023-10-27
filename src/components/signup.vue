@@ -47,12 +47,12 @@ let signup = () => {
     }
 
     let options = {
-        signup_confirmation: false,
+        signup_confirmation: '/welcome',
     };
 
     skapi.signup(params, options).then(res => {
         console.log(res);
-        router.push({ path: '/' });
+        router.push({ path: '/checkemail' });
     }).catch(err => {
         console.log(err)
     });
@@ -86,7 +86,7 @@ let signup = () => {
 }
 
 .title {
-    font-size: 30px;
+    font-size: 1.8em;
     font-weight: 700;
     margin-bottom: 30px;
 }

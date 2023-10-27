@@ -70,7 +70,7 @@ let login = () => {
 }
 
 .title {
-    font-size: 30px;
+    font-size: 1.8em;
     font-weight: 700;
     margin-bottom: 30px;
 }

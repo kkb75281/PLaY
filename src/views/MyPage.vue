@@ -1,7 +1,7 @@
 <template lang="pug">
 #myPage
     .wrap 
-        
+        .material-symbols-outlined.big.backspace keyboard_backspace
 </template>
 
 <script setup>
@@ -24,5 +24,8 @@
     background-color: rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(30px);
     color: #fff;
+}
+.backspace {
+    position: absolute;
 }
 </style>

@@ -9,11 +9,18 @@ import { account } from '@/main.js';
 let router = useRouter();
 let route = useRoute();
 
-watch(account, (next, prev) => {
-    if(account == null) {
-        router.replace({ path: '/login' });
-    }
-})
+// watch(account, (next, prev) => {
+//     if(next == null) {
+//         switch (route.path.split('/')[1]) {
+//             case 'checkemail':
+//             case 'welcome':
+//                 break;
+//             default:
+//                 router.replace({ path: '/login' });
+//                 break;
+//         }
+//     }
+// })
 </script>
 <style lang="less" scoped>
 

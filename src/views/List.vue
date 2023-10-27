@@ -48,16 +48,16 @@ skapi.getRecords({ table: 'Album' }).then(response => {
 
     nextTick(() => {
         let albums = document.querySelectorAll('.album');
-        let albumWidth = albums[0].offsetWidth;
-        let firstAlbum = albums[0];
-        let lastAlbum = albums[albums.length - 1];
-        let cloneFirstAlbum = firstAlbum.cloneNode(true);
-        let cloneLastAlbum = lastAlbum.cloneNode(true);
+        // let albumWidth = albums[0].offsetWidth;
+        // let firstAlbum = albums[0];
+        // let lastAlbum = albums[albums.length - 1];
+        // let cloneFirstAlbum = firstAlbum.cloneNode(true);
+        // let cloneLastAlbum = lastAlbum.cloneNode(true);
 
         function init() {
             autoPlay();
         }
-        init();
+        // init();
 
         function autoPlay() {
             albumTimer = setInterval(() => {

@@ -3,7 +3,6 @@ import Main from '@/views/Main.vue'
 import Upload from '@/views/upload.vue'
 import List from '@/views/List.vue'
 import MyPage from '@/views/MyPage.vue'
-import Welcome from '@/views/Welcome.vue'
 import Login from '@/components/login.vue'
 import Signup from '@/components/signup.vue'
 
@@ -43,7 +42,12 @@ const router = createRouter({
     {
         path: '/welcome',
         name: 'welcome',
-        component: Welcome
+        component: () => import('@/views/Welcome.vue')
+    },
+    {
+        path: '/checkemail',
+        name: 'checkemail',
+        component: () => import('@/views/CheckEmail.vue')
     },
     {
       // path: '/about',

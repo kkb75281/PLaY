@@ -1,11 +1,10 @@
 <template lang="pug">
-.successWindow
+.checkEmailWindow
     .wrap 
-        .inner
-            .material-symbols-outlined.symbol.icon waving_hand
-            .title Welcome to PLaY
-            p Please log in with the email and password I sent you via email and enjoy PLaY :-D
-            RouterLink(:to="{name: 'login'}") Login
+        .inner 
+            .material-symbols-outlined.symbol.icon mark_email_unread
+            .title Check your email
+            p Please check the email you entered earlier for confirmation. Click the link in your email to verify your email address.
 </template>
 
 <script setup>
@@ -13,7 +12,7 @@
 </script>
 
 <style lang="less" scoped>
-.successWindow {
+.checkEmailWindow {
     position: relative;
     width: 100vw;
     height: 100vh;
@@ -40,7 +39,6 @@
 
 .icon {
     font-size: 100px;
-    margin-bottom: 20px;
 }
 
 .title {
@@ -52,23 +50,6 @@
 p {
     text-align: center;
     font-size: 1.1em;
-    margin-bottom: 40px;
     opacity: 0.7;
-}
-
-a {
-    display: inline-block;
-    padding: 5px 20px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    text-decoration: none;
-    color: #fff;
-    transition: all 0.3s;
-
-    &:hover {
-        border: 1px solid rgba(0, 0, 0, 0.3);
-        background-color: rgba(255, 255, 255, 0.3);
-        color: #000;
-    }
 }
 </style>
