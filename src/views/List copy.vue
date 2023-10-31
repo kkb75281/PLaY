@@ -1,14 +1,18 @@
 <template lang="pug">
 #list
     .wrap 
+        //-     .searchWrap 
+        //-         form(@submit.prevent="search")
+        //-             input#search(v-model="searchText")
+        //-             .material-symbols-outlined.mid.icon(:class="{'active' : searchText}") search
         .albumWrap 
             .albumInner(ref="albumInner")
                 .album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)")
                     img.cover(:src="album.url")
                     .title {{ album.title }}
                     .artist {{ album.artist }}
-            //- .playWrap(v-if="showCD" @click="showMusic = true")
-            //-     .playInner(ref="playInner" :class="{ 'rotating' : showCD }")
+            .playWrap(v-if="showCD" @click="showMusic = true")
+                .playInner(ref="playInner" :class="{ 'rotating' : showCD }")
         //- Music(v-if="showMusic && selectedAlbum" :selectedAlbum = "selectedAlbum")
 MenuBar
 </template>
@@ -35,6 +39,7 @@ let currentIndex = 0;
 
 // 앨범 레코드 불러오기
 skapi.getRecords({ table: 'Album' }).then(response => {
+    console.log(response);
     for (let i = 0; i < response.list.length; i++) {
         let list = {};
 
@@ -46,6 +51,64 @@ skapi.getRecords({ table: 'Album' }).then(response => {
     }
     // 배열 요소 무작위로 섞기
     albumList.value.sort(() => Math.random() - 0.5);
+    console.log(albumList.value)
+
+    // nextTick(() => {
+    //     let albums = document.querySelectorAll('.album');
+    //     // let albumWidth = albums[0].offsetWidth;
+    //     // let firstAlbum = albums[0];
+    //     // let lastAlbum = albums[albums.length - 1];
+    //     // let cloneFirstAlbum = firstAlbum.cloneNode(true);
+    //     // let cloneLastAlbum = lastAlbum.cloneNode(true);
+
+    //     function init() {
+    //         autoPlay();
+    //     }
+    //     // init();
+
+    //     function autoPlay() {
+    //         albumTimer = setInterval(() => {
+    //             let intervalNum = currentIndex + 1;
+    //             gotoSlider(intervalNum);
+    //         }, 2000)
+    //     }
+
+    //     function stopPlay() {
+    //         clearInterval(albumTimer);
+    //     }
+
+    //     function imgClone() {
+    //         albumInner.value.appendChild(cloneFirstAlbum);
+    //         albumInner.value.insertBefore(cloneLastAlbum, firstAlbum);
+    //     }
+
+    //     function gotoSlider(index) {
+    //         // albumInner.value.classList.add("transition");
+    //         albumInner.value.style.left = -albumWidth * (index + 1) + "px";
+
+    //         currentIndex = index;
+    //     }
+
+    //     function checkIndex() {
+    //         // albumInner.value.classList.remove("transition");
+
+    //         // 마지막 이미지
+    //         if (currentIndex == albums.length) {
+    //             albumInner.value.style.left = -(1 * albumWidth) + "px";
+    //             currentIndex = 0;
+    //         }
+
+    //         // 처음 이미지
+    //         if (currentIndex == -1) {
+    //             albumInner.value.style.left = -(albums.length * albumWidth) + "px";
+    //             currentIndex = albums.length - 1;
+    //         }
+    //     }
+
+    //     albumInner.value.addEventListener("mouseenter", stopPlay);
+    //     albumInner.value.addEventListener("mouseleave", autoPlay);
+    //     albumInner.value.addEventListener("transitionend", checkIndex);
+    // })
 });
 
 

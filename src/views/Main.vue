@@ -4,6 +4,7 @@
         .title Hello, {{ account.name ? account.name : '' }}
         .menuIcons
             RouterLink.material-symbols-outlined.big.icon(:to="{name: 'list'}") subscriptions
+            RouterLink.material-symbols-outlined.big.icon(:to="{name: 'upload'}") cloud_upload
             RouterLink.material-symbols-outlined.big.icon(:to="{name: 'mypage'}") face
             .material-symbols-outlined.big.icon(@click="logout") logout
 </template>

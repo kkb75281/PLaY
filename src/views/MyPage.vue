@@ -1,11 +1,17 @@
 <template lang="pug">
 #myPage
     .wrap 
-        .material-symbols-outlined.big.backspace keyboard_backspace
+        .inner
+MenuBar
 </template>
 
 <script setup>
+import { useRoute, useRouter } from 'vue-router';
 
+import MenuBar from '@/components/MenuBar.vue'
+
+let route = useRoute();
+let router = useRouter();
 </script>
 
 <style lang="less" scoped>
@@ -24,8 +30,5 @@
     background-color: rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(30px);
     color: #fff;
-}
-.backspace {
-    position: absolute;
 }
 </style>

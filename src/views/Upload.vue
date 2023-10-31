@@ -1,37 +1,44 @@
 <template lang="pug">
-.uploadWindow
+.material-symbols-outlined.big.backspace(@click="router.go(-1)") keyboard_backspace
+#uploadWindow
     .wrap
-        .title Upload
-        form#uploadForm(@submit.prevent="upload")
-            .input.required
-                label(for="title") Title
-                input#title(type="text" name="title" placeholder="Title" @input="e=> { form.title = e.target.value; }" required)
-            .input.required
-                label(for="artist") Artist
-                input#artist(type="text" name="artist" placeholder="Artist" @input="e=> { form.artist = e.target.value; }" required)
-            .inputFile.required
-                .tit Cover
-                p {{ uploadFileName || "Upload a file"}}
-                label(for="cover") Click
-                input#cover(hidden type="file" name="cover" ref="uploadFile" @change="readURL")
-            .previewFile(ref="previewFile")
-                img#preview(ref="preview")
-            .input.lyrics(:class="{'required' : form.lyrics}")
-                label(for="lyrics") Lyrics
-                textarea#lyrics(type="text" name="lyrics" placeholder="Lyrics" @input="e=> { form.lyrics = e.target.value; }" @keydown="resizeTextarea")
-            .input(:class="{'required' : form.year}")
-                label(for="year") Year
-                input#year(type="number" placeholder="Year" v-model='year')
-                //- .controlBtn
-                //-     .btn.minus
-                //-     .btn.plus
-            .input(:class="{'required' : form.track}")
-                label(for="track") Track
-                input#track(type="text" name="track" placeholder="Track" @input="e=> { form.track = e.target.value; }")
-            .input(:class="{'required' : form.tag}")
-                label(for="tag") Tag
-                input#tag(type="text" placeholder="separate with a comma(,)" pattern="[a-zA-Z0-9 ,]+" v-model='tagsInput')
-            input.submit(type="submit" value="Upload")
+        .inner
+            .title Upload
+            form#uploadForm(@submit.prevent="upload")
+                .input.required
+                    label(for="title") Title
+                    input#title(type="text" name="title" placeholder="Title" @input="e=> { form.title = e.target.value; }" required)
+                .input.required
+                    label(for="artist") Artist
+                    input#artist(type="text" name="artist" placeholder="Artist" @input="e=> { form.artist = e.target.value; }" required)
+                .inputFile.required
+                    .tit mp3
+                    p {{ uploadFileName || "Upload a file"}}
+                    label(for="file") Click
+                    input#file(hidden type="file" name="file" ref="uploadFile" @change="readURL('file')")
+                .inputFile.required
+                    .tit Cover
+                    p {{ uploadCoverName || "Upload a file"}}
+                    label(for="cover") Click
+                    input#cover(hidden type="file" name="cover" ref="uploadCover" @change="readURL('cover')")
+                .previewFile(ref="previewFile")
+                    img#preview(ref="preview")
+                .input.lyrics(:class="{'required' : form.lyrics}")
+                    label(for="lyrics") Lyrics
+                    textarea#lyrics(type="text" name="lyrics" placeholder="Lyrics" @input="e=> { form.lyrics = e.target.value; }" @keydown="resizeTextarea")
+                .input(:class="{'required' : form.year}")
+                    label(for="year") Year
+                    input#year(type="number" placeholder="Year" v-model='year')
+                    //- .controlBtn
+                    //-     .btn.minus
+                    //-     .btn.plus
+                .input(:class="{'required' : form.track}")
+                    label(for="track") Track
+                    input#track(type="text" name="track" placeholder="Track" @input="e=> { form.track = e.target.value; }")
+                .input(:class="{'required' : form.tag}")
+                    label(for="tag") Tag
+                    input#tag(type="text" placeholder="separate with a comma(,)" pattern="[a-zA-Z0-9 ,]+" v-model='tagsInput')
+                input.submit(type="submit" value="Upload")
 </template>
 
 <script setup>
@@ -46,8 +53,10 @@ let form = reactive({
     artist: '',
     track: '',
 })
+let uploadCoverName = ref('');
 let uploadFileName = ref('');
 let uploadFile = ref(null);
+let uploadCover = ref(null);
 let previewFile = ref(null);
 let preview = ref(null);
 let year = ref('');
@@ -58,17 +67,22 @@ let resizeTextarea = (e) => {
     e.target.style.height = '1px';
     e.target.style.height = (12 + e.target.scrollHeight) + 'px';
 }
-let readURL = () => {
-    if (uploadFile.value.files.length > 0) {
-        uploadFileName.value = uploadFile.value.files[0].name;
+let readURL = (fileName) => {
+    if (uploadFile.value.files.length > 0 || uploadCover.value.files.length > 0) {
 
-        let reader = new FileReader();
-        
-        reader.onload = (e) => {
-            console.log(e.target.result);
-            preview.value.src = e.target.result;
-        };
-        reader.readAsDataURL(uploadFile.value.files[0]);
+        if(fileName == 'file') {
+            uploadFileName.value = uploadFile.value.files[0].name;
+        } else {
+            uploadCoverName.value = uploadCover.value.files[0].name;
+    
+            let reader = new FileReader();
+            
+            reader.onload = (e) => {
+                console.log(e.target.result);
+                preview.value.src = e.target.result;
+            };
+            reader.readAsDataURL(uploadCover.value.files[0]);
+        }
     }
 }
 let upload = (e) => {
@@ -105,25 +119,42 @@ let upload = (e) => {
 </script>
 
 <style lang="less" scoped>
-.uploadWindow {
+#uploadWindow {
+    width: 100vw;
     height: 100vh;
     margin: 0 auto;
     display: table;
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(30px);
+    background: url(@/assets/egg.jpg) no-repeat;
+    background-size: cover;
     z-index: 99999;
 }
 
+.backspace {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    z-index: 9;
+    cursor: pointer;
+}
+
 .wrap {
+    width: 100%;
+    height: 100%;
     display: table-cell;
     vertical-align: middle;
-    width: 400px;
-    // text-align: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(30px);
     color: #fff;
 }
 
+.inner {
+    width: 400px;
+    padding: 100px 0;
+    margin: 0 auto;
+}
+
 .title {
-    font-size: 30px;
+    font-size: 1.6em;
     font-weight: 700;
     margin-bottom: 30px;
     text-align: center;
@@ -183,6 +214,8 @@ let upload = (e) => {
 
         &.submit {
             width: 100%;
+            margin-top: 20px;
+            margin-bottom: 0;
             font-size: 16px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             background-color: unset;
@@ -296,6 +329,8 @@ let upload = (e) => {
 
         img {
             width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     }
 }</style>

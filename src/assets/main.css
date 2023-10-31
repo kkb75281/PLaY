@@ -45,6 +45,12 @@ textarea:focus {
   outline: none;
 }
 
+.material-symbols-outlined.wh {
+    color: #fff;
+}
+.material-symbols-outlined.bl {
+    color: #000;
+}
 .material-symbols-outlined.sml {
   font-variation-settings:
   'FILL' 0,
