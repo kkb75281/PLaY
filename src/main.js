@@ -1,4 +1,5 @@
 import './assets/main.css';
+import './assets/reset.less';
 
 import { createApp, ref } from 'vue';
 import { Skapi } from 'skapi-js';
