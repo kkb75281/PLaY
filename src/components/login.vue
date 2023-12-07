@@ -2,11 +2,19 @@
 .loginWindow
     .wrap 
         .inner
-            .title PLaY
+            a(href="/" style="color:rgba(0,0,0,0.8)")
+                .material-symbols-outlined(style="font-size: 36px") ecg_heart
+
+            br
+            br
+
             form#loginForm(@submit.prevent="login")
                 input(type="email" name="email" placeholder="E-Mail" @input="e=> { form.email = e.target.value; }" required)
                 input#password(type="password" name="password" placeholder="Password" @input="e=>form.password = e.target.value" required)
                 input.submit(type="submit" value="Login")
+                
+            br
+
             .signup Don't have an account?
                 RouterLink(:to="{name: 'signup'}") SignUp
 </template>
@@ -50,8 +58,6 @@ let login = () => {
     width: 100vw;
     height: 100vh;
     display: table;
-    background: url(@/assets/login-background.jpg) no-repeat;
-    background-size: cover;
     overflow: hidden;
 }
 
@@ -59,9 +65,9 @@ let login = () => {
     display: table-cell;
     vertical-align: middle;
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.5);
+    // background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(30px);
-    color: #fff;
+    color: rgba(0,0,0,0.8);
 }
 
 .inner {
@@ -71,8 +77,7 @@ let login = () => {
 
 .title {
     font-size: 1.8em;
-    font-weight: 700;
-    margin-bottom: 30px;
+    font-weight: 900;
 }
 
 #loginForm {
@@ -80,22 +85,19 @@ let login = () => {
 
     input {
         display: block;
-        padding: 8px;
+        padding: 10px;
         border-radius: 8px;
         width: 100%;
-        border: 1px solid rgba(255,255,255,0.3);
-        background-color: unset;
-        margin-bottom: 10px;
-        color: #fff;
+        background-color: rgba(0,0,0,0.1);
+        border: unset;
+        margin-bottom: 0.5rem;
         
         &.submit {
             transition: all 0.3s;
             cursor: pointer;
 
             &:hover {
-                border: 1px solid rgba(0,0,0,0.3);
-                background-color: rgba(255,255,255,0.3);
-                color: #000;
+                background-color: rgba(0,0,0,0.3);
             }
         }
     }
@@ -103,12 +105,11 @@ let login = () => {
 
 .signup {
     font-size: 14px;
-    color: #777777;
 
     a {
         margin-left: 10px;
         text-decoration: none;
-        color: #fff;
+        color: rgba(0,0,0,0.8);
         font-weight: 700;
         cursor: pointer;
     }

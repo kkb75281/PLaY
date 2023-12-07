@@ -3,7 +3,11 @@
 #uploadWindow
     .wrap
         .inner
-            .title Upload
+            .material-symbols-outlined(style="font-size: 36px; color:rgba(0,0,0,0.8);") cloud_upload
+
+            br
+            br
+
             form#uploadForm(@submit.prevent="upload")
                 .input.required
                     label(for="title") Title
@@ -124,8 +128,6 @@ let upload = (e) => {
     height: 100vh;
     margin: 0 auto;
     display: table;
-    background: url(@/assets/egg.jpg) no-repeat;
-    background-size: cover;
     z-index: 99999;
 }
 
@@ -142,9 +144,8 @@ let upload = (e) => {
     height: 100%;
     display: table-cell;
     vertical-align: middle;
-    background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(30px);
-    color: #fff;
+    color: rgba(0,0,0,0.8);
 }
 
 .inner {
@@ -186,9 +187,8 @@ let upload = (e) => {
                 padding: 8px;
                 border-radius: 8px;
                 border: 0;
-                background-color: rgba(255, 255, 255, 0.1);
+                background-color: rgba(0,0,0,0.1);
                 margin-bottom: 10px;
-                color: #fff;
             }
         }
     }
@@ -198,34 +198,32 @@ let upload = (e) => {
         display: inline-block;
         width: 80px;
         opacity: 0.5;
+        display: none;
     }
 
     input,
     p {
         display: inline-block;
-        padding: 8px;
+        padding: 10px;
         border-radius: 8px;
-        width: calc(100% - 80px);
-        // border: 1px solid rgba(255,255,255,0.3);
+        // width: calc(100% - 80px);
+        width: 100%;
         border: 0;
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: rgba(0,0,0,0.1);
         margin-bottom: 10px;
-        color: #fff;
 
         &.submit {
             width: 100%;
             margin-top: 20px;
             margin-bottom: 0;
             font-size: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background-color: unset;
+            background-color: rgba(0,0,0,0.1);
+            border: unset;
             transition: all 0.3s;
             cursor: pointer;
 
             &:hover {
-                border: 1px solid rgba(0, 0, 0, 0.2);
-                background-color: rgba(255, 255, 255, 0.3);
-                color: #000;
+                background-color: rgba(0,0,0,0.3);
             }
         }
     }
@@ -294,7 +292,7 @@ let upload = (e) => {
             margin: 0;
             padding-right: 80px;
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(0,0,0,0.4);
         }
 
         label {
@@ -323,7 +321,7 @@ let upload = (e) => {
         width: 400px;
         height: 400px;
         border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(0,0,0,0.1);
         margin-bottom: 10px;
         overflow: hidden;
 

@@ -10,7 +10,7 @@
             //- .playWrap(v-if="showCD" @click="showMusic = true")
             //-     .playInner(ref="playInner" :class="{ 'rotating' : showCD }")
         //- Music(v-if="showMusic && selectedAlbum" :selectedAlbum = "selectedAlbum")
-MenuBar
+//- MenuBar
 </template>
 <script setup>
 import { skapi, account } from '@/main'
@@ -70,8 +70,6 @@ onBeforeRouteLeave(() => {
     position: relative;
     width: 100vw;
     height: 100vh;
-    background: url(@/assets/egg.jpg) no-repeat;
-    background-size: cover;
 }
 
 .wrap {

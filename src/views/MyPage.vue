@@ -2,7 +2,7 @@
 #myPage
     .wrap 
         .inner
-MenuBar
+//- MenuBar
 </template>
 
 <script setup>
@@ -20,8 +20,6 @@ let router = useRouter();
     width: 100vw;
     height: 100vh;
     display: table;
-    background: url(@/assets/login-background.jpg) no-repeat;
-    background-size: cover;
 }
 .wrap {
     display: table-cell;
