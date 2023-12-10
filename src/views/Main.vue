@@ -2,33 +2,71 @@
 #main
     .wrap
         template(v-if="account")
-            RouterLink.router(:to="{name: 'list'}" style="padding: 10px 22px 13px; background-color: #FF2849; border-radius: 30px;") 
-                span.material-symbols-outlined list
+            RouterLink.router.black(:to="{name: 'upload'}" style="color:#FF9900; margin-right:8rem;")
+                span.material-symbols-outlined cloud_upload
+                span &nbsp;upload
+
+            .router.black.blank
+                span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            br
+            br
+
+            RouterLink.router(:to="{name: 'mypage'}" style="background-color: #056DFA; margin-left:8rem;")
+                span.material-symbols-outlined thumb_up
+                span &nbsp;likes
+
+            RouterLink.router(:to="{name: 'mypage'}" style="background-color: #FF2849; margin-left:8rem;")
+                span.material-symbols-outlined queue_music
+                span &nbsp;playlist
+
+            br
+            br
+
+            .router.black.blank(style="margin-right:10rem;")
+                span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            .router(@click="logout" style="background-color:rgba(255,40,73,0.3); color:rgba(255,40,73); margin-left:10rem;")
+                span.material-symbols-outlined logout
+
+            br
+            br
+
+            RouterLink.router(:to="{name: 'list'}" style="background-color: #FF9900; margin-right:10rem;") 
+                span.material-symbols-outlined headphones
                 span &nbsp;music list
 
             br
             br
 
-            RouterLink.router(:to="{name: 'mypage'}" style="padding: 10px 22px 13px; background-color: #A649DA; border-radius: 30px; margin-right:8rem;")
-                span.material-symbols-outlined thumb_up
-                span &nbsp;likes
-
-            br
-            br
-
-            RouterLink.router(:to="{name: 'upload'}" style="padding: 10px 22px 13px; background-color: #30C04F; border-radius: 30px; margin-left:8rem;")
-                span.material-symbols-outlined cloud_upload
-                span &nbsp;upload
-
-            br
-            br
-
-            RouterLink.router(:to="{name: 'mypage'}" style="padding: 10px 22px 13px; background-color: #056DFA; border-radius: 30px; margin-left:2rem;")
+            .router(style="background-color:rgba(5,109,250,0.3); margin-right:10rem; color:#056DFA")
+                span.material-symbols-outlined manage_search
+            
+            RouterLink.router.black(:to="{name: 'mypage'}" style="color:#FF2849; margin-left:2rem;")
                 span.material-symbols-outlined face
                 span &nbsp;my page
+
+            br
+            br
+
+            .router.black.blank
+                span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            .router(@click="changeBgColcor" style="background-color:rgba(255,153,0,0.3); color:#FF9900; margin-left:5rem;")
+                span.material-symbols-outlined brightness_4
+
+            br
+            br
+
+            .router.black.blank
+                span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            
         template(v-else)
             a.login(href="/login") 
-                .material-symbols-outlined(style="font-size:10rem;") ecg_heart
+                .material-symbols-outlined.icon(style="font-size:10rem;") ecg_heart
 
 //-     .wrap 
 //-         img(src="@/assets/headset.png")
@@ -37,16 +75,30 @@
 
 <script setup>
 import { skapi, account } from '@/main';
+import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 let route = useRoute();
 let router = useRouter();
+let mode = ref('light');
 
 let logout = async() => {
     skapi.logout().then(() => {
         account.value = null;
     });
     router.replace({ path: '/login' });
+}
+
+let changeBgColcor = () => {
+    if(mode.value == 'light') {
+        mode.value = 'dark';
+        document.body.style.setProperty('--main-bgColor', '#1b1b1c');
+        document.body.style.setProperty('--main-color', '#f1f1f1');
+    } else {
+        mode.value = 'light';
+        document.body.style.setProperty('--main-bgColor', '#c3d7db');
+        document.body.style.setProperty('--main-color', '#1b1b1c');
+    }
 }
 </script>
 
@@ -72,16 +124,56 @@ let logout = async() => {
         color:rgba(0,0,0,0.8);
         opacity: 0.8;
 
+        .icon {
+            animation: bounce 1s infinite linear;
+            -moz-animation: bounce 1s infinite linear;
+            -webkit-animation: bounce 1s infinite linear;
+            -o-animation: bounce 1s infinite linear;
+        }
+
         &:hover {
             opacity: 0.5;
 
-            h1 {
-                transform: scale(0.95);
+            .icon {
+                animation-play-state:paused;
             }
+        }
+    }
+    @keyframes bounce {
+        0% {
+            transform: scale(1.1);
+        }
+        25% {
+            transform: scale(0.9);
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        75% {
+            transform: scale(1);
+        }
+        100% {
+            transform: scale(1.1);
+        }
+    }
+    @-webkit-keyframes bounce {
+        0% {
+            transform: scale(1.2);
+        }
+        33% {
+            transform: scale(0.9);
+        }
+        66% {
+            transform: scale(1.3);
+        }
+        100% {
+            transform: scale(1);
         }
     }
     .router {
         display: inline-block;
+        padding: 10px 17px 13px;
+        border-radius: 30px;
         vertical-align: middle;
         transition: all 0.3s;
         opacity: 0.8;
@@ -90,6 +182,12 @@ let logout = async() => {
         &:hover {
             box-shadow: inset 0px 0px 8px 5px rgba(0,0,0,0.2);
             transform: scale(0.98);
+        }
+        &.black {
+            background-color: #1B1B1C; 
+        }
+        &.blank {
+            cursor: default;
         }
         span {
             vertical-align: middle;

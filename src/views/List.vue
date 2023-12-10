@@ -1,14 +1,15 @@
 <template lang="pug">
 #list
-    .wrap 
-        .albumWrap 
-            .albumInner(ref="albumInner")
-                .album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)")
-                    img.cover(:src="album.url")
-                    .title {{ album.title }}
-                    .artist {{ album.artist }}
-            //- .playWrap(v-if="showCD" @click="showMusic = true")
-            //-     .playInner(ref="playInner" :class="{ 'rotating' : showCD }")
+    //- .wrap
+    //- .wrap 
+    //-     .albumWrap 
+    //-         .albumInner(ref="albumInner")
+    //-             .album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)")
+    //-                 img.cover(:src="album.url")
+    //-                 .title {{ album.title }}
+    //-                 .artist {{ album.artist }}
+    //-         .playWrap(v-if="showCD" @click="showMusic = true")
+    //-             .playInner(ref="playInner" :class="{ 'rotating' : showCD }")
         //- Music(v-if="showMusic && selectedAlbum" :selectedAlbum = "selectedAlbum")
 //- MenuBar
 </template>
@@ -75,35 +76,10 @@ onBeforeRouteLeave(() => {
 .wrap {
     width: 100%;
     height: 100%;
-    padding: 40px 40px 0;
-    background-color: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(30px);
-}
-
-.searchWrap {
-    position: relative;
-    margin-bottom: 1.5em;
-
-    input {
-        width: 100%;
-        padding: 1em 2em;
-        font-size: 1em;
-        background-color: rgba(255,255,255,0.1);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 1.5em;
-        color: #fff;
-    }
-    .icon {
-        position: absolute;
-        top: 50%;
-        right: 1em;
-        transform: translateY(-50%);
-        opacity: 0.2;
-
-        &.active {
-            opacity: 0.7;
-        }
-    }
+    margin-left: 100px;
+    // padding: 40px 40px 0;
+    background-color: #1B1B1C;
+    // backdrop-filter: blur(30px);
 }
 
 .albumWrap {

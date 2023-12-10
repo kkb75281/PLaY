@@ -6,12 +6,9 @@
   box-sizing: border-box;
 }
 
-body {
-  width: 100%;
-  height: 100%;
-  background-color: #f0f0f0;
-  color: rgba(0, 0, 0, 0.8);
-  font-family: "Montserrat", sans-serif;
+:root {
+  --main-bgColor: #c3d7db;
+  --main-color: #1b1b1c;
 }
 
 @keyframes bganimation {
@@ -27,6 +24,10 @@ body {
 }
 
 body {
+  width: 100%;
+  height: 100%;
+  color: var(--main-color);
+  font-family: "Montserrat", sans-serif;
   background: radial-gradient(
       ellipse at center,
       rgba(0, 0, 255, 0.3) 0%,
@@ -44,11 +45,10 @@ body {
         rgba(0, 255, 0, 0.3) 0%,
         rgba(0, 0, 0, 0) 70%
       )
-      /*zielony */ #c3d7db;
+      /*zielony */ var(--main-bgColor);
   background-repeat: no-repeat, no-repeat, no-repeat;
   background-size: 900px 900px, 900px 900px, 900px 900px;
   background-attachment: fixed;
-
   animation: bganimation 30s infinite;
 }
 
@@ -144,5 +144,13 @@ select:focus {
   outline: none;
 }
 
-input:-webkit-autofill { -webkit-box-shadow: 0 0 0 30px transparent inset ; -webkit-text-fill-color: #000; }
-input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active { transition: background-color 5000s ease-in-out 0s; }
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px transparent inset;
+  -webkit-text-fill-color: #000;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s;
+}
