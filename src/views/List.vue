@@ -1,13 +1,12 @@
 <template lang="pug">
 #list
-    //- .wrap
-    //- .wrap 
-    //-     .albumWrap 
-    //-         .albumInner(ref="albumInner")
-    //-             .album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)")
-    //-                 img.cover(:src="album.url")
-    //-                 .title {{ album.title }}
-    //-                 .artist {{ album.artist }}
+    .wrap 
+        .albumWrap 
+            .albumInner(ref="albumInner")
+                .album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)")
+                    img.cover(:src="album.url")
+                    .title {{ album.title }}
+                    .artist {{ album.artist }}
     //-         .playWrap(v-if="showCD" @click="showMusic = true")
     //-             .playInner(ref="playInner" :class="{ 'rotating' : showCD }")
         //- Music(v-if="showMusic && selectedAlbum" :selectedAlbum = "selectedAlbum")
@@ -76,9 +75,9 @@ onBeforeRouteLeave(() => {
 .wrap {
     width: 100%;
     height: 100%;
-    margin-left: 100px;
+    background-color: rgba(27,27,28,0.7);
     // padding: 40px 40px 0;
-    background-color: #1B1B1C;
+    // background-color: #1B1B1C;
     // backdrop-filter: blur(30px);
 }
 

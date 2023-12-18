@@ -17,12 +17,12 @@
                     input#artist(type="text" name="artist" placeholder="Artist" @input="e=> { form.artist = e.target.value; }" required)
                 .inputFile.required
                     .tit mp3
-                    p {{ uploadFileName || "Upload a file"}}
+                    p {{ uploadFileName || "Upload a music file"}}
                     label(for="file") Click
                     input#file(hidden type="file" name="file" ref="uploadFile" @change="readURL('file')")
                 .inputFile.required
                     .tit Cover
-                    p {{ uploadCoverName || "Upload a file"}}
+                    p {{ uploadCoverName || "Upload a cover file"}}
                     label(for="cover") Click
                     input#cover(hidden type="file" name="cover" ref="uploadCover" @change="readURL('cover')")
                 .previewFile(ref="previewFile")
@@ -297,7 +297,7 @@ let upload = (e) => {
 
         label {
             position: absolute;
-            top: 8px;
+            top: 10px;
             right: 8px;
             width: 65px;
             border-radius: 8px;
@@ -306,6 +306,7 @@ let upload = (e) => {
             background-color: rgba(0, 0, 0, 0.5);
             transition: all 0.3s;
             cursor: pointer;
+            display: block !important;
 
             &:hover {
                 opacity: 1;

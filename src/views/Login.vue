@@ -10,7 +10,13 @@
 
             form#loginForm(@submit.prevent="login")
                 input(type="email" name="email" placeholder="E-Mail" @input="e=> { form.email = e.target.value; }" required)
-                input#password(type="password" name="password" placeholder="Password" @input="e=>form.password = e.target.value" required)
+                .password
+                    input#password(:type='showPassword ? "text" : "password"' name="password" placeholder="Password" @input="e=>form.password = e.target.value" required)
+                    .passwordIcon(@click="showPassword = !showPassword")
+                        template(v-if="showPassword")
+                            .material-symbols-outlined.sml visibility
+                        template(v-else)
+                            .material-symbols-outlined.sml visibility_off
                 input.submit(type="submit" value="Login")
                 
             br
@@ -26,6 +32,7 @@ import { ref } from 'vue';
 
 let route = useRoute();
 let router = useRouter();
+let showPassword = ref(false);
 let promiseRunning = ref(false);
 let form = {
     email: '',
@@ -101,6 +108,18 @@ let login = () => {
             }
         }
     }
+    .password {
+        position: relative;
+        .passwordIcon {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            scale: 0.85;
+            opacity: 0.85;
+            cursor: pointer;
+        }
+    }   
 }
 
 .signup {

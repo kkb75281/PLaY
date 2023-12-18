@@ -3,8 +3,8 @@ import Main from '@/views/Main.vue'
 import Upload from '@/views/upload.vue'
 import List from '@/views/List.vue'
 import MyPage from '@/views/MyPage.vue'
-import Login from '@/components/login.vue'
-import Signup from '@/components/signup.vue'
+import Login from '@/views/login.vue'
+import Signup from '@/views/signup.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
