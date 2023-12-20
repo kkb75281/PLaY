@@ -1,67 +1,44 @@
 <template lang="pug">
 #main
     .wrap
-        template(v-if="account")
-            RouterLink.router.black(:to="{name: 'upload'}" style="color:#FF9900; margin-right:8rem;")
+        .routerWrap(v-if="account")
+            RouterLink.router.black(:to="{name: 'upload'}" style="color:#FF9900;")
                 span.material-symbols-outlined cloud_upload
                 span &nbsp;upload
 
             .router.black.blank
-                span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                span &nbsp;
 
-            br
-            br
-
-            RouterLink.router(:to="{name: 'mypage'}" style="background-color: #056DFA; margin-left:8rem;")
+            RouterLink.router(:to="{name: 'mypage'}" style="background-color: #056DFA;")
                 span.material-symbols-outlined thumb_up
                 span &nbsp;likes
 
-            RouterLink.router(:to="{name: 'mypage'}" style="background-color: #FF2849; margin-left:8rem;")
+            RouterLink.router(:to="{name: 'mypage'}" style="background-color: #FF2849;")
                 span.material-symbols-outlined queue_music
                 span &nbsp;playlist
 
-            br
-            br
+            .router.black.blank(style="margin-right:calc(2rem + 7rem);")
+                span &nbsp;
 
-            .router.black.blank(style="margin-right:10rem;")
-                span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-            .router(@click="logout" style="background-color:rgba(255,40,73,0.3); color:rgba(255,40,73); margin-left:10rem;")
+            .router(@click="logout" style="background-color:rgba(255,40,73,0.3); color:rgba(255,40,73);")
                 span.material-symbols-outlined logout
 
-            br
-            br
-
-            RouterLink.router(:to="{name: 'list'}" style="background-color: #FF9900; margin-right:10rem;") 
+            RouterLink.router(:to="{name: 'list'}" style="background-color: #FF9900;") 
                 span.material-symbols-outlined headphones
                 span &nbsp;music list
 
-            br
-            br
-
-            .router(style="background-color:rgba(5,109,250,0.3); margin-right:10rem; color:#056DFA")
+            .router(style="background-color:rgba(5,109,250,0.3); color:#056DFA")
                 span.material-symbols-outlined manage_search
             
-            RouterLink.router.black(:to="{name: 'mypage'}" style="color:#FF2849; margin-left:2rem;")
+            RouterLink.router.black(:to="{name: 'mypage'}" style="color:#FF2849;")
                 span.material-symbols-outlined face
                 span &nbsp;my page
 
-            br
-            br
-
             .router.black.blank
-                span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                span &nbsp;
 
-            .router(@click="changeBgColcor" style="background-color:rgba(255,153,0,0.3); color:#FF9900; margin-left:5rem;")
+            .router(@click="changeBgColcor" style="background-color:rgba(255,153,0,0.3); color:#FF9900;")
                 span.material-symbols-outlined brightness_4
-
-            br
-            br
-
-            .router.black.blank
-                span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
             
         template(v-else)
@@ -94,10 +71,16 @@ let changeBgColcor = () => {
         mode.value = 'dark';
         document.body.style.setProperty('--main-bgColor', '#1b1b1c');
         document.body.style.setProperty('--main-color', '#f1f1f1');
+        document.body.style.setProperty('--main-inputBg', 'rgba(255,255,255,0.1)');
+        document.body.style.setProperty('--main-iconColor', 'rgba(255,255,255,0.5)');
+        document.body.style.setProperty('--main-placeholder', 'rgba(255,255,255,0.4)');
     } else {
         mode.value = 'light';
         document.body.style.setProperty('--main-bgColor', '#c3d7db');
         document.body.style.setProperty('--main-color', '#1b1b1c');
+        document.body.style.setProperty('--main-inputBg', 'rgba(0,0,0,0.1)');
+        document.body.style.setProperty('--main-iconColor', 'rgba(0,0,0,0.8)');
+        document.body.style.setProperty('--main-placeholder', 'rgba(0,0,0,0.4)');
     }
 }
 </script>
@@ -117,6 +100,10 @@ let changeBgColcor = () => {
     a {
         text-decoration: none;
         color:rgba(0,0,0,0.8);
+    }
+    .routerWrap {
+        max-width: 780px;
+        margin: 0 auto;
     }
 
     .login {
@@ -172,19 +159,23 @@ let changeBgColcor = () => {
     }
     .router {
         display: inline-block;
-        padding: 10px 17px 13px;
-        border-radius: 30px;
-        vertical-align: middle;
+        width: 7rem;
+        height: 7rem;
+        margin-right: 1rem;
+        margin-bottom: 1rem;
+        line-height: 7rem;
+        text-align: center;
+        border-radius: 1rem;
         transition: all 0.3s;
         opacity: 0.8;
         cursor: pointer;
 
         &:hover {
-            box-shadow: inset 0px 0px 8px 5px rgba(0,0,0,0.2);
+            // box-shadow: inset 0px 0px 8px 5px rgba(0,0,0,0.2);
             transform: scale(0.98);
         }
         &.black {
-            background-color: #1B1B1C; 
+            background-color: #282828; 
         }
         &.blank {
             cursor: default;

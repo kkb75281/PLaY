@@ -3,7 +3,7 @@
 #uploadWindow
     .wrap
         .inner
-            .material-symbols-outlined(style="font-size: 36px; color:rgba(0,0,0,0.8);") cloud_upload
+            .material-symbols-outlined(style="font-size: 36px; color:var(--main-iconColor);") cloud_upload
 
             br
             br
@@ -25,8 +25,8 @@
                     p {{ uploadCoverName || "Upload a cover file"}}
                     label(for="cover") Click
                     input#cover(hidden type="file" name="cover" ref="uploadCover" @change="readURL('cover')")
-                .previewFile(ref="previewFile")
-                    img#preview(ref="preview")
+                .previewFile(ref="previewFile" style="border:0")
+                    img#preview(ref="preview" style="border:0")
                 .input.lyrics(:class="{'required' : form.lyrics}")
                     label(for="lyrics") Lyrics
                     textarea#lyrics(type="text" name="lyrics" placeholder="Lyrics" @input="e=> { form.lyrics = e.target.value; }" @keydown="resizeTextarea")
@@ -101,7 +101,7 @@ let upload = (e) => {
     let config = {
         table: {
             name: 'Album',
-            access_group: 'authorized'
+            access_group: 'public'
         }
     }
 
@@ -176,7 +176,7 @@ let upload = (e) => {
 
         &.lyrics {
             label {
-                display: block;
+                // display: block;
                 margin-bottom: 10px;
             }
 
@@ -187,7 +187,7 @@ let upload = (e) => {
                 padding: 8px;
                 border-radius: 8px;
                 border: 0;
-                background-color: rgba(0,0,0,0.1);
+                background-color: var(--main-inputBg);
                 margin-bottom: 10px;
             }
         }
@@ -209,7 +209,7 @@ let upload = (e) => {
         // width: calc(100% - 80px);
         width: 100%;
         border: 0;
-        background-color: rgba(0,0,0,0.1);
+        background-color: var(--main-inputBg);
         margin-bottom: 10px;
 
         &.submit {
@@ -292,7 +292,7 @@ let upload = (e) => {
             margin: 0;
             padding-right: 80px;
             font-size: 14px;
-            color: rgba(0,0,0,0.4);
+            color: var(--main-placeholder);
         }
 
         label {
@@ -321,14 +321,16 @@ let upload = (e) => {
     .previewFile {
         width: 400px;
         height: 400px;
-        border-radius: 8px;
-        border: 1px solid rgba(0,0,0,0.1);
+        // border-radius: 8px;
         margin-bottom: 10px;
-        overflow: hidden;
-
+        // border: 0;
+        // overflow: hidden;
+        
         img {
             width: 100%;
             height: 100%;
+            border: 1px solid var(--main-iconColor);
+            border-radius: 8px;
             object-fit: cover;
         }
     }

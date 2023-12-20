@@ -9,6 +9,9 @@
 :root {
   --main-bgColor: #c3d7db;
   --main-color: #1b1b1c;
+  --main-inputBg: rgba(0,0,0,0.1);
+  --main-iconColor: rgba(0,0,0,0.8);
+  --main-placeholder: rgba(0,0,0,0.4);
 }
 
 @keyframes bganimation {
@@ -130,12 +133,12 @@ button {
 
 input,
 textarea {
-  color: rgba(0, 0, 0, 0.8) !important;
+  color: var(--main-iconColor) !important;
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: rgba(0, 0, 0, 0.4) !important;
+  color: var(--main-placeholder) !important;
   font-size: 1em !important;
 }
 

@@ -1,22 +1,38 @@
 <template lang="pug">
+.material-symbols-outlined.big.backspace(@click="router.go(-1)") keyboard_backspace
 #list
+    //- RouterLink.home(:to="{name: 'home'}")
+    //-     .material-symbols-outlined.icon(style="font-size:2rem; margin: 20px;") ecg_heart
+
+    //- .wrap 
+    //-     .albumWrap 
+    //-         .albumInner(ref="albumInner")
+    //-             .album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)")
+    //-                 img.cover(:src="album.url")
+                    //- .title {{ album.title }}
+                    //- .artist {{ album.artist }}
+
     .wrap 
         .albumWrap 
-            .albumInner(ref="albumInner")
-                .album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)")
+            Swiper.swiper.albumInner(ref="albumInner" :modules="[Autoplay]" :freeMode="true" :slidesPerView="6" :autoplay="{delay: 0,disableOnInteraction: false}" dir="ltr" speed="20000" :loop="true" style="transition-timing-function: linear;")
+                SwiperSlide.slider.album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)" @mouseover="swiper.autoplay.stop();")
                     img.cover(:src="album.url")
-                    .title {{ album.title }}
-                    .artist {{ album.artist }}
-    //-         .playWrap(v-if="showCD" @click="showMusic = true")
-    //-             .playInner(ref="playInner" :class="{ 'rotating' : showCD }")
-        //- Music(v-if="showMusic && selectedAlbum" :selectedAlbum = "selectedAlbum")
-//- MenuBar
+            Swiper.swiper.albumInner(ref="albumInner" :modules="[Autoplay]" :freeMode="true" :slidesPerView="6" :autoplay="{delay: 0,disableOnInteraction: false}" dir="rtl" speed="20000" :loop="true" style="transition-timing-function: linear;")
+                SwiperSlide.slider.album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)")
+                    img.cover(:src="album.url")
+            Swiper.swiper.albumInner(ref="albumInner" :modules="[Autoplay]" :freeMode="true" :slidesPerView="6" :autoplay="{delay: 0,disableOnInteraction: false}" dir="ltr" speed="20000" :loop="true" style="transition-timing-function: linear;")
+                SwiperSlide.slider.album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)")
+                    img.cover(:src="album.url")
+
+
 </template>
 <script setup>
 import { skapi, account } from '@/main'
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 import { nextTick, onMounted, ref } from 'vue';
-import { onBeforeRouteLeave } from 'vue-router';
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { Autoplay } from "swiper/modules";
+import "swiper/css";
 
 import Music from '@/views/Music.vue'
 import MenuBar from '@/components/MenuBar.vue'
@@ -35,6 +51,7 @@ let currentIndex = 0;
 
 // 앨범 레코드 불러오기
 skapi.getRecords({ table: 'Album' }).then(response => {
+    console.log(response)
     for (let i = 0; i < response.list.length; i++) {
         let list = {};
 
@@ -75,13 +92,17 @@ onBeforeRouteLeave(() => {
 .wrap {
     width: 100%;
     height: 100%;
-    background-color: rgba(27,27,28,0.7);
+    margin-top: 70px;
+    // padding: 0 20px;
+    // background-color: rgba(27,27,28,0.7);
     // padding: 40px 40px 0;
     // background-color: #1B1B1C;
     // backdrop-filter: blur(30px);
 }
 
 .albumWrap {
+    // width: 800px;
+    // margin: 0 auto;
     width: 100%;
     overflow: hidden;
     color: #000;
@@ -98,8 +119,8 @@ onBeforeRouteLeave(() => {
         cursor: pointer;
 
         img {
-            width: 300px;
-            height: 300px;
+            width: 10rem;
+            height: 10rem;
         }
     }
 }
