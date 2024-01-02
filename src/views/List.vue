@@ -12,19 +12,37 @@
                     //- .title {{ album.title }}
                     //- .artist {{ album.artist }}
 
-    .wrap 
-        .albumWrap 
-            Swiper.swiper.albumInner(ref="albumInner" :modules="[Autoplay]" :freeMode="true" :slidesPerView="6" :autoplay="{delay: 0,disableOnInteraction: false}" dir="ltr" speed="20000" :loop="true" style="transition-timing-function: linear;")
-                SwiperSlide.slider.album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)" @mouseover="swiper.autoplay.stop();")
-                    img.cover(:src="album.url")
-            Swiper.swiper.albumInner(ref="albumInner" :modules="[Autoplay]" :freeMode="true" :slidesPerView="6" :autoplay="{delay: 0,disableOnInteraction: false}" dir="rtl" speed="20000" :loop="true" style="transition-timing-function: linear;")
-                SwiperSlide.slider.album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)")
-                    img.cover(:src="album.url")
-            Swiper.swiper.albumInner(ref="albumInner" :modules="[Autoplay]" :freeMode="true" :slidesPerView="6" :autoplay="{delay: 0,disableOnInteraction: false}" dir="ltr" speed="20000" :loop="true" style="transition-timing-function: linear;")
-                SwiperSlide.slider.album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)")
-                    img.cover(:src="album.url")
+    //- .wrap 
+    //-     .albumWrap 
+    //-         Swiper.swiper.albumInner(ref="albumInner" :modules="[Autoplay]" :freeMode="true" :slidesPerView="6" :autoplay="{delay: 0,disableOnInteraction: false}" dir="ltr" speed="20000" :loop="true" style="transition-timing-function: linear;")
+    //-             SwiperSlide.slider.album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)" @mouseover="swiper.autoplay.stop();")
+    //-                 img.cover(:src="album.url")
+    //-         Swiper.swiper.albumInner(ref="albumInner" :modules="[Autoplay]" :freeMode="true" :slidesPerView="6" :autoplay="{delay: 0,disableOnInteraction: false}" dir="rtl" speed="20000" :loop="true" style="transition-timing-function: linear;")
+    //-             SwiperSlide.slider.album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)")
+    //-                 img.cover(:src="album.url")
+    //-         Swiper.swiper.albumInner(ref="albumInner" :modules="[Autoplay]" :freeMode="true" :slidesPerView="6" :autoplay="{delay: 0,disableOnInteraction: false}" dir="ltr" speed="20000" :loop="true" style="transition-timing-function: linear;")
+    //-             SwiperSlide.slider.album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)")
+    //-                 img.cover(:src="album.url")
 
-
+    .wrap
+        .albumWrap
+            .albumInner 
+                .album(v-for="(album, index) in albumList" :id="'album'+index" @click="clickAlbum(index)")
+                    img.cover(:src="album.url")
+                    //- .title {{ album.title }}
+                    //- .artist {{ album.artist }}
+    
+#player(v-if="showPlayer")
+    .selectAlbum
+        img.cover(:src="selectedAlbum.url")
+        div
+            .title {{ selectedAlbum.title }}
+            .artist {{ selectedAlbum.artist }}
+    .buttonWrap 
+        .material-symbols-outlined.mid.wh(@click="playerControl") skip_previous
+        .material-symbols-outlined.mid.wh(v-if="playStart" @click="playerControl") pause
+        .material-symbols-outlined.mid.wh(v-if="!playStart" @click="playerControl") play_arrow
+        .material-symbols-outlined.mid.wh(@click="playerControl") skip_next
 </template>
 <script setup>
 import { skapi, account } from '@/main'
@@ -42,12 +60,15 @@ let router = useRouter();
 let albumInner = ref(null);
 let playInner = ref(null);
 let showCD = ref(false);
+let showPlayer = ref(false);
+let playStart = ref(false);
 let showMusic = ref(false);
 let albumList = ref([]);
 let selectedAlbum = ref([]);
 let searchText = ref('')
 let albumTimer = "";
 let currentIndex = 0;
+let audio;
 
 // 앨범 레코드 불러오기
 skapi.getRecords({ table: 'Album' }).then(response => {
@@ -58,6 +79,7 @@ skapi.getRecords({ table: 'Album' }).then(response => {
         list.title = response.list[i].data.title;
         list.artist = response.list[i].data.artist;
         list.url = response.list[i].bin.cover[0].url;
+        list.file = response.list[i].bin.file[0].url;
 
         albumList.value.push(list);
     }
@@ -65,13 +87,33 @@ skapi.getRecords({ table: 'Album' }).then(response => {
     albumList.value.sort(() => Math.random() - 0.5);
 });
 
+let initAlbum = () => {
+    showPlayer.value = false;
+    selectedAlbum.value = [];
+    playStart.value = false;
+    if(audio) {
+        audio.pause();
+    }
+} 
 
 let clickAlbum = (index) => {
-    showCD.value = true;
+    initAlbum();
+
+    showPlayer.value = true;
     selectedAlbum.value = albumList.value[index];
-    nextTick(() => {
-        playInner.value.style.background = `url('${selectedAlbum.value.url}') no-repeat`;
-    })
+    audio = new Audio(selectedAlbum.value.file);
+    playStart.value = true;
+    audio.play();
+}
+
+let playerControl = () => {
+    if(audio.paused) {
+        audio.play();
+        playStart.value = true;
+    } else {
+        audio.pause();
+        playStart.value = false;
+    }
 }
 
 let search = () => {
@@ -89,6 +131,21 @@ onBeforeRouteLeave(() => {
     height: 100vh;
 }
 
+#player {
+    position: fixed;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    background-color: rgba(0,0,0,0.8);
+    z-index: 99;
+}
+
 .wrap {
     width: 100%;
     height: 100%;
@@ -101,27 +158,57 @@ onBeforeRouteLeave(() => {
 }
 
 .albumWrap {
-    // width: 800px;
-    // margin: 0 auto;
-    width: 100%;
-    overflow: hidden;
+    // width: 1000px;
+    // width: 100%;
+    // overflow: hidden;
     color: #000;
-
+    
     .albumInner {
         position: relative;
-        display: flex;
-        flex-wrap: nowrap;
-        transition: all 0.5s;
+        margin: 0 auto;
+        // display: flex;
+        // flex-wrap: nowrap;
+        // transition: all 0.5s;
     }
 
     .album {
+        display: inline-block;
+        width: 200px;
+        height: 200px;
         margin-right: 20px;
+        margin-bottom: 20px;
         cursor: pointer;
 
         img {
-            width: 10rem;
-            height: 10rem;
+            width: 100%;
+            height: 100%;
         }
+    }
+}
+
+.selectAlbum {
+    margin-right: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    .cover {
+        width: 60px;
+        height: 60px;
+        margin-right: 10px;
+    }
+    .title {
+        font-weight: 700;
+    }
+    .artist {
+        opacity: 0.5;
+    }
+}
+
+.buttonWrap {
+    * {
+        padding: 0 10px;
+        cursor: pointer;
     }
 }
 
