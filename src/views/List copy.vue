@@ -23,7 +23,6 @@ import { nextTick, onMounted, ref } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
 
 import Music from '@/views/Music.vue'
-import MenuBar from '@/components/MenuBar.vue'
 
 let route = useRoute();
 let router = useRouter();

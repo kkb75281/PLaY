@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Main from '@/views/Main.vue'
 import Upload from '@/views/upload.vue'
+import Music from '@/views/Music.vue'
 import List from '@/views/List.vue'
 import MyPage from '@/views/MyPage.vue'
 import Login from '@/views/login.vue'
 import Signup from '@/views/signup.vue'
+import MenuList from '@/components/MenuList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,6 +15,32 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: Main
+    },
+    {
+        path: '/',
+        component: Main,
+        children: [
+            {
+                path: 'menu',
+                name: 'menu',
+                component: MenuList
+            },
+            {
+                path: 'list',
+                name: 'list',
+                component: List
+            },
+            {
+                path: '/list/:music',
+                // children: [
+                //   {
+                //     path: '',
+                //     name: 'music',
+                //     component: Music
+                //   },
+                // ]
+            }
+        ]
     },
     {
         path: '/login',
@@ -28,11 +56,6 @@ const router = createRouter({
       path: '/upload',
       name: 'upload',
       component: Upload
-    },
-    {
-      path: '/list',
-      name: 'list',
-      component: List
     },
     {
       path: '/mypage',
