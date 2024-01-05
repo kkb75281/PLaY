@@ -1,14 +1,14 @@
 <template lang="pug">
-template(v-if="account")
-    #main
+#main
+    template(v-if="account")
         RouterLink.home(:to="{name: 'menu'}")
             .material-symbols-outlined.icon ecg_heart
         router-view
 
-template(v-else)
-    .wrap
-        a.login(href="/login") 
-            .material-symbols-outlined.icon(style="font-size:10rem;") ecg_heart
+    template(v-else)
+        .wrap
+            a.login(href="/login") 
+                .material-symbols-outlined.icon(style="font-size:10rem;") ecg_heart
 </template>
 
 <script setup>
@@ -47,7 +47,7 @@ let router = useRouter();
     width: 100vw;
     height: 100vh;
     display: table;
-    padding-top: 4.5rem;
+    // padding-top: 4.5rem;
 }
 .wrap {
     display: table-cell;

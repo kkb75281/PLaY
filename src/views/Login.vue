@@ -54,7 +54,7 @@ let login = () => {
         promiseRunning.value = false;
         console.log(err);
     }).finally(() => {
-        router.push({ path: '/' });
+        router.push({ path: '/list' });
     });
 }
 </script>
@@ -112,7 +112,7 @@ let login = () => {
         position: relative;
         .passwordIcon {
             position: absolute;
-            top: 50%;
+            top: 42%;
             right: 10px;
             transform: translateY(-50%);
             scale: 0.85;

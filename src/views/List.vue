@@ -182,6 +182,7 @@ let search = () => {
     margin: 0 auto;
     border-radius: 20px;
     padding: 10px 20px;
+    margin-top: 4.5rem;
     background-color: rgba(0,0,0,0.1);
 
     .icon {
