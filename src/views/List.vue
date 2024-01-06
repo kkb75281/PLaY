@@ -8,39 +8,44 @@ br
     .wrap
         .albumWrap
             .albumInner 
-                .album(v-for="(album, index) in allAlbumList" :id="'album'+index" @click="clickAlbum(index)")
-                    img.cover(:src="album.url")
+                .album(v-for="(track, index) in tracks" :id="'track'+index" @click="clickTrack(index)")
+                    img.cover(:src="track.cover")
                     .albumInfo 
-                        h5.title {{ album.title }}
-                        .artist {{ album.artist }}
+                        h5.title {{ track.data.title }}
+                        .artist {{ track.artist }}
 
 #player(:class="{'show' : showPlayer, 'moveUp' : showMusic}")
-    .progressBar(ref="progressBar" @click="moveTimeLine")
-        .progress(ref="progress")
-    .playerInfo
-        .selectAlbum(@click="moveToMusicPage")
-            img.cover(:src="selectedAlbum.url")
-            .text
-                .title {{ selectedAlbum.title }}
-                .artist {{ selectedAlbum.artist }}
-        .iconWrap
-            .like.icon(@click="likeToggleButton")
-                .material-symbols-outlined.mid.wh.fill(v-if="like") favorite
-                .material-symbols-outlined.mid.wh.empty(v-else) favorite
-            .material-symbols-outlined.mid.wh.empty.icon lyrics
-        .playWrap 
-            .material-symbols-outlined.mid.wh.fill(@click="playerControl('prev')") skip_previous
-            .material-symbols-outlined.mid.wh.fill(v-if="playStart" @click="playAudio") pause
-            .material-symbols-outlined.mid.wh.fill(v-if="!playStart" @click="playAudio") play_arrow
-            .material-symbols-outlined.mid.wh.fill(@click="playerControl('next')") skip_next
-        .timerWrap 
-            span.current(ref="current") 0:00
-            span /
-            span.duration(ref="duration") 0:00
-    .arrow
-        .material-symbols-outlined.mid.wh.fill(v-if="showMusic" @click="showMusic = false;") expand_more
-        .material-symbols-outlined.mid.wh.fill(v-else @click="showMusic = true;") expand_less
-    Music
+    .controller
+        .progressBar(ref="progressBar" @click="moveTimeLine")
+            .progress(ref="progress")
+        .playerInfo
+            .selectAlbum
+                img.cover(:src="selectedAlbum.cover" @click="(e)=>showDetail(e)")
+                .text
+                    .title(@click="(e)=>showDetail(e)") {{ selectedAlbum.title }}
+                    .artist(@click="(e)=>showDetail(e)") {{ selectedAlbum.artist }}
+            .iconWrap
+                .like.icon(@click="likeToggleButton")
+                    .material-symbols-outlined.mid.wh.fill(v-if="like") favorite
+                    .material-symbols-outlined.mid.wh.empty(v-else) favorite
+                .material-symbols-outlined.mid.wh.empty.icon lyrics
+            .playWrap 
+                .material-symbols-outlined.mid.wh.fill(@click="playerControl('prev')") skip_previous
+                .material-symbols-outlined.mid.wh.fill(v-if="playStart" @click="playAudio") pause
+                .material-symbols-outlined.mid.wh.fill(v-if="!playStart" @click="playAudio") play_arrow
+                .material-symbols-outlined.mid.wh.fill(@click="playerControl('next')") skip_next
+            .timerWrap 
+                span.current(ref="current") 0:00
+                span /
+                span.duration(ref="duration") 0:00
+        .arrow
+            .material-symbols-outlined.mid.wh.fill(v-if="showMusic" @click="showMusic = false;") expand_more
+            .material-symbols-outlined.mid.wh.fill(v-else @click="showMusic = true;") expand_less
+    .viewDetail
+        router-view(v-if="detail==selectedAlbum.record_id" name="album" :selectedAlbum='selectedAlbum')
+        router-view(v-if="detail==selectedAlbum.music" name="music")
+        router-view(v-if="detail==selectedAlbum.artist" name="artist")
+        //- router-view(name="video")
 </template>
 <script setup>
 import { skapi, account } from '@/main'
@@ -50,7 +55,8 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 
-import Music from '@/views/Music.vue'
+import Music from '@/views/Detail/Music.vue'
+// import Player from '@/components/Player.vue'
 
 let route = useRoute();
 let router = useRouter();
@@ -62,29 +68,40 @@ let showPlayer = ref(false);
 let playStart = ref(false);
 let showMusic = ref(false);
 let like = ref(false);
-let allAlbumList = ref([]);
+// let tracks = ref([]);
 let selectedAlbum = ref([]);
-let searchText = ref('')
+let searchText = ref('');
+let detail = ref('');
 let AlbumIndex = 1;
 let audio;
 
+let albums = ref([]);
+let tracks = ref([]);
 
-// 앨범 레코드 불러오기
-skapi.getRecords({ table: 'Album' }).then(response => {
-    console.log(response)
-    for (let i = 0; i < response.list.length; i++) {
-        let list = {};
+skapi.getRecords({ table: 'Album' }).then(async(album) => {
+    albums.value = album.list;
+    console.log(albums.value)
 
-        list.title = response.list[i].data.title;
-        list.artist = response.list[i].data.artist;
-        list.url = response.list[i].bin.cover[0].url;
-        list.file = response.list[i].bin.file[0].url;
-
-        allAlbumList.value.push(list);
+    for (let i = 0; i < albums.value.length; i++) {
+        await skapi.getRecords({ table: 'Track', reference: albums.value[i].record_id }).then((track) => {
+            for (let j = 0; j < track.list.length; j++) {
+                track.list[j].cover = albums.value[i].bin.cover[0].url;
+                track.list[j].date = JSON.parse(albums.value[i].data.date);
+                track.list[j].title = track.list[j].data.title;
+                if(albums.value[i].data.artist) {
+                    track.list[j].artist = albums.value[i].data.artist;
+                } else {
+                    track.list[j].artist = track.list[j].data.artist
+                }
+                tracks.value.push(track.list[j]);
+            }
+        });
     }
-    // 배열 요소 무작위로 섞기
-    allAlbumList.value.sort(() => Math.random() - 0.5);
+
+    tracks.value.sort(() => Math.random() - 0.5);
 });
+
+
 
 let initAlbum = () => {
     showPlayer.value = false;
@@ -95,12 +112,12 @@ let initAlbum = () => {
     }
 } 
 
-let clickAlbum = (index) => {
+let clickTrack = (index) => {
     initAlbum();
 
     showPlayer.value = true;
-    selectedAlbum.value = allAlbumList.value[index];
-    audio = new Audio(selectedAlbum.value.file);
+    selectedAlbum.value = tracks.value[index];
+    audio = new Audio(selectedAlbum.value.bin.file[0].url);
     playAudio();
     audio.play();
     playStart.value = true;
@@ -160,8 +177,8 @@ let likeToggleButton = () => {
 
 let playerControl = (value) => {
     if(value == 'prev') {
-        AlbumIndex == 1 ? AlbumIndex = allAlbumList.value.length : AlbumIndex--;
-        clickAlbum(AlbumIndex)
+        AlbumIndex == 1 ? AlbumIndex = tracks.value.length : AlbumIndex--;
+        clickTrack(AlbumIndex)
     } else {
 
     }
@@ -169,6 +186,29 @@ let playerControl = (value) => {
 
 let moveToMusicPage = () => {
     showMusic.value = !showMusic.value;
+}
+
+let showDetail = (e) => {
+    // let current;
+    // if (current == detail) {
+    //     showMusic.value = showMusic.value;
+    //     router.push('/list');
+    // }
+    console.log(route)
+    // if(route.fullPath.includes(detail)) {
+
+    // }
+    showMusic.value = !showMusic.value;
+    if (e.target.className == 'cover') {
+        router.push('/list/detail?' + selectedAlbum.value.record_id);
+        detail = selectedAlbum.value.record_id = current;
+    } else if (e.target.className == 'title') {
+        router.push('/list/detail?' + selectedAlbum.value.title);
+        detail = selectedAlbum.value.title = current;
+    } else if (e.target.className == 'artist') {
+        router.push('/list/detail?' + selectedAlbum.value.artist);
+        detail = selectedAlbum.value.artist = current;
+    }
 }
 
 let search = () => {
@@ -214,132 +254,139 @@ let search = () => {
     left: 0;
     bottom: 0;
     width: 100%;
-    height: 80px;
-    // background-color: rgba(0,0,0,0.8);
     background-color: var(--main-color);
     border-radius: 20px 20px 0 0;
-    transform: translateY(100px);
-    // -webkit-backdrop-filter: blur(2px);
-    // backdrop-filter: blur(2px);
+    transform: translateY(100vh);
     transition: all 1s;
     z-index: 999;
-    // overflow: hidden;
 
     &.show {
-        transform: translateY(0px);
+        transform: translateY(calc(100vh - 90px));
     }
 
     &.moveUp {
-        transform: translateY(calc(-100vh + 90px));
-        // overflow: visible;
+        transform: translateY(0px);
     }
-
-    .arrow {
-        position: absolute;
-        top: 50%;
-        right: 30px;
-        transform: translateY(-50%);
-        opacity: 0.5;
-        transition: all 0.3s;
-        cursor: pointer;
-
-        &:hover {
-            opacity: 1;
-        }
-        > div {
-            font-size: 1.4rem;
-        }
-    }
-
-    .progressBar {
+    .controller {
         position: relative;
-        width: 98%;
-        height: 2.5px;
-        margin: 0 auto;
-        cursor: pointer;
+        height: 80px;
 
-        .progress {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            background-color: #fff;
-        }
-    }
-
-    .playerInfo {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-        padding: 8px 10px;
-        gap: 2rem;
-        color: #fff;
-
-        .selectAlbum {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding-right: 10px;
-            color: #fff;
+        .progressBar {
+            position: relative;
+            width: 98%;
+            height: 2.5px;
+            margin: 0 auto;
             cursor: pointer;
 
-            &:hover {
+            .progress {
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                background-color: #fff;
+            }
+        }
+
+        .playerInfo {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            padding: 8px 10px;
+            gap: 2rem;
+            color: #fff;
+
+            .selectAlbum {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                padding-right: 10px;
+                color: #fff;
+
+                * {
+                    cursor: pointer;
+                }
+
+                .cover {
+                    width: 60px;
+                    height: 60px;
+                }
                 .title {
-                    text-decoration: underline;
+                    font-weight: 700;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+                .artist {
+                    opacity: 0.5;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
                 }
             }
 
-            .cover {
-                width: 60px;
-                height: 60px;
-            }
-            .title {
-                font-weight: 700;
-            }
-            .artist {
-                opacity: 0.5;
-            }
-        }
+            .iconWrap {
+                .icon {
+                    display: inline-block;
+                    opacity: 0.5;
+                    transition: all 0.3s;
+                    margin-right: 10px;
+                    cursor: pointer;
 
-        .iconWrap {
-            .icon {
-                display: inline-block;
-                opacity: 0.5;
-                transition: all 0.3s;
-                margin-right: 10px;
-                cursor: pointer;
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+            }
 
-                &:hover {
-                    opacity: 1;
+            .playWrap {
+                * {
+                    display: inline-block;
+                    vertical-align: middle;
+                    padding: 0 10px;
+                    cursor: pointer;
+                }
+            }
+
+            .timerWrap {
+                width: 85px;
+                text-align: center;
+                font-size: 0.8rem;
+
+                span {
+                    padding: 0 2px;
+                    opacity: 0.5;
+                    
+                    &.duration {
+                        opacity: 1;
+                    }
                 }
             }
         }
 
-        .playWrap {
-            * {
-                display: inline-block;
-                vertical-align: middle;
-                padding: 0 10px;
-                cursor: pointer;
+        .arrow {
+            position: absolute;
+            top: 50%;
+            right: 30px;
+            transform: translateY(-50%);
+            opacity: 0.5;
+            transition: all 0.3s;
+            cursor: pointer;
+    
+            &:hover {
+                opacity: 1;
+            }
+            > div {
+                font-size: 1.4rem;
             }
         }
+    }
 
-        .timerWrap {
-            width: 85px;
-            text-align: center;
-            font-size: 0.8rem;
-
-            span {
-                padding: 0 2px;
-                opacity: 0.5;
-                
-                &.duration {
-                    opacity: 1;
-                }
-            }
-        }
+    .viewDetail {
+        height: calc(100vh - 90px);
     }
 }
 

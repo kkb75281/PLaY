@@ -6,6 +6,18 @@
   cursor: pointer;
 }
 
+.running {
+    font-size: 20px;
+    margin: 0 auto;
+    animation: rotate_image 1.5s linear infinite;
+    transform-origin: 50% 50%;
+}
+@keyframes rotate_image {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 .material-symbols-outlined {
     display: inline-block;
     vertical-align: middle;

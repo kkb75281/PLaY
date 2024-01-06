@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Main from '@/views/Main.vue'
-import Upload from '@/views/Upload.vue'
-import Music from '@/views/Music.vue'
-import List from '@/views/List.vue'
-import MyPage from '@/views/MyPage.vue'
 import Login from '@/views/Login.vue'
 import Signup from '@/views/Signup.vue'
+import Upload from '@/views/Upload.vue'
+import List from '@/views/List.vue'
+import MyPage from '@/views/MyPage.vue'
+import Album from '@/views/Detail/Album.vue'
+import Music from '@/views/Detail/Music.vue'
 import MenuList from '@/components/MenuList.vue'
 
 const router = createRouter({
@@ -28,18 +29,28 @@ const router = createRouter({
             {
                 path: 'list',
                 name: 'list',
-                component: List
-            },
-            {
-                path: '/list/:music',
+                component: List,
                 children: [
-                  {
-                    path: '',
-                    name: 'music',
-                    component: Music
-                  },
+                    {
+                        path: 'detail',
+                        name: 'detail',
+                        components: {
+                            album: Album,
+                            music: Music,
+                        }
+                    }
                 ]
-            }
+            },
+            // {
+            //     path: '/list/:music',
+            //     children: [
+            //       {
+            //         path: '',
+            //         name: 'music',
+            //         component: Music
+            //       },
+            //     ]
+            // }
         ]
     },
     {

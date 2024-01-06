@@ -13,7 +13,10 @@
                 input(type="email" name="email" placeholder="E-Mail" @input="e=> { form.email = e.target.value; }" required)
                 input#password(type="password" name="password" placeholder="Password" @input="e=>form.password = e.target.value" @change="validatePassword" required)
                 input(type="password" name="passwordConfirm" placeholder="Confirm the password" ref="confirmPasswordField" @input="e=> { form.password_confirm = e.target.value; e.target.setCustomValidity(''); error = ''}" @change="validatePassword" required)
-                input.submit(type="submit" value="SignUp")
+                div(v-if="promiseRunning" style="height:35.5px;line-height:35.5px;")
+                    .material-symbols-outlined.sml.running progress_activity
+                template(v-else)
+                    input.submit(type="submit" value="SignUp")
 
             br
 

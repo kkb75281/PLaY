@@ -3,7 +3,7 @@
     .wrap 
         .inner
             a(href="/" style="color:rgba(0,0,0,0.8)")
-                .material-symbols-outlined(style="font-size: 36px") ecg_heart
+                .material-symbols-outlined(style="font-size: 36px") login
 
             br
             br
@@ -17,7 +17,10 @@
                             .material-symbols-outlined.sml visibility
                         template(v-else)
                             .material-symbols-outlined.sml visibility_off
-                input.submit(type="submit" value="Login")
+                div(v-if="promiseRunning" style="height:35.5px;line-height:35.5px;")
+                    .material-symbols-outlined.sml.running progress_activity
+                template(v-else)
+                    input.submit(type="submit" value="Login")
                 
             br
 
