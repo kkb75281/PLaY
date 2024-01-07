@@ -14,7 +14,7 @@ br
                         h5.title {{ track.data.title }}
                         .artist {{ track.artist }}
 
-#player(:class="{'show' : showPlayer, 'moveUp' : showMusic}")
+#player(:class="{'show' : showPlayer, 'moveUp' : showAlbum}")
     .controller
         .progressBar(ref="progressBar" @click="moveTimeLine")
             .progress(ref="progress")
@@ -39,18 +39,18 @@ br
                 span /
                 span.duration(ref="duration") 0:00
         .arrow
-            .material-symbols-outlined.mid.wh.fill(v-if="showMusic" @click="showMusic = false;") expand_more
-            .material-symbols-outlined.mid.wh.fill(v-else @click="showMusic = true;") expand_less
+            .material-symbols-outlined.mid.wh.fill.down(v-if="showAlbum" @click="(e)=>showDetail(e)") expand_more
+            .material-symbols-outlined.mid.wh.fill.up(v-else @click="(e)=>showDetail(e)") expand_less
     .viewDetail
-        router-view(v-if="detail==selectedAlbum.record_id" name="album" :selectedAlbum='selectedAlbum')
-        router-view(v-if="detail==selectedAlbum.music" name="music")
-        router-view(v-if="detail==selectedAlbum.artist" name="artist")
+        router-view(v-if="detail=='album'" name="album" :selectedAlbum='selectedAlbum')
+        router-view(v-if="detail=='track'" name="music")
+        router-view(v-if="detail=='artist'" name="artist")
         //- router-view(name="video")
 </template>
 <script setup>
 import { skapi, account } from '@/main'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
-import { nextTick, onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref, watch } from 'vue';
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -66,7 +66,7 @@ let current = ref(null);
 let duration = ref(null);
 let showPlayer = ref(false);
 let playStart = ref(false);
-let showMusic = ref(false);
+let showAlbum = ref(false);
 let like = ref(false);
 // let tracks = ref([]);
 let selectedAlbum = ref([]);
@@ -99,6 +99,7 @@ skapi.getRecords({ table: 'Album' }).then(async(album) => {
     }
 
     tracks.value.sort(() => Math.random() - 0.5);
+    console.log(tracks.value)
 });
 
 
@@ -117,6 +118,8 @@ let clickTrack = (index) => {
 
     showPlayer.value = true;
     selectedAlbum.value = tracks.value[index];
+    console.log(selectedAlbum.value)
+    console.log(selectedAlbum.value)
     audio = new Audio(selectedAlbum.value.bin.file[0].url);
     playAudio();
     audio.play();
@@ -185,36 +188,31 @@ let playerControl = (value) => {
 }
 
 let moveToMusicPage = () => {
-    showMusic.value = !showMusic.value;
+    showAlbum.value = !showAlbum.value;
 }
 
 let showDetail = (e) => {
-    // let current;
-    // if (current == detail) {
-    //     showMusic.value = showMusic.value;
-    //     router.push('/list');
-    // }
-    console.log(route)
-    // if(route.fullPath.includes(detail)) {
+    showAlbum.value = !showAlbum.value;
 
-    // }
-    showMusic.value = !showMusic.value;
+    if (!showAlbum.value) {
+        router.go(-1);
+    }
+
     if (e.target.className == 'cover') {
+        router.push('/list/detail?' + selectedAlbum.value.reference.record_id);
+        detail = 'album';
+    } else if (e.target.className == 'title' || e.target.className.includes('up')) {
         router.push('/list/detail?' + selectedAlbum.value.record_id);
-        detail = selectedAlbum.value.record_id = current;
-    } else if (e.target.className == 'title') {
-        router.push('/list/detail?' + selectedAlbum.value.title);
-        detail = selectedAlbum.value.title = current;
+        detail = 'track';
     } else if (e.target.className == 'artist') {
         router.push('/list/detail?' + selectedAlbum.value.artist);
-        detail = selectedAlbum.value.artist = current;
+        detail = 'artist';
     }
 }
 
-let search = () => {
-
+if (route.fullPath.includes('detail')) {
+    router.go(-1);
 }
-
 </script>
 <style lang="less" scoped>
 #search {

@@ -1,6 +1,7 @@
 <template lang="pug">
 #album(ref="album")
     .wrap
+        img.backImg(:src="props.selectedAlbum.cover")
         .info
             .cover
                 img(:src="props.selectedAlbum.cover")
@@ -16,18 +17,32 @@
             p.artist {{ props.selectedAlbum.artist }}
             br
             p.date {{ timeStamp.getFullYear() + '.' + timeStamp.getMonth() + '.' + timeStamp.getDate() }}
-
+        br
+        .trackList
+            .list(v-for="(list, index) in trackList")
+                span.index {{ index + 1 }}
+                span.title {{ list.data.title }}
+                span.time 03:34
 </template>
 
 <script setup>
 import { nextTick, ref } from 'vue';
+import { skapi, account } from '@/main'
 
-// let music = ref(null);
 let props = defineProps(['selectedAlbum']);
+let trackList;
 let timeStamp = new Date(props.selectedAlbum.date);
-console.log(timeStamp)
 
-console.log(props)
+console.log(props.selectedAlbum)
+console.log(props.selectedAlbum.reference.record_id)
+
+skapi.getRecords({
+    table: 'Track',
+    reference: props.selectedAlbum.reference.record_id
+}).then(async(response) => {
+    trackList = response.list
+    await nextTick();
+});
 
 // nextTick(() => {
 //     music.value.style.background = `url('${selectedAlbum.url}') no-repeat`;
@@ -52,6 +67,20 @@ console.log(props)
 
     &:hover {
         opacity: 1;
+    }
+}
+.wrap {
+    position: relative;
+
+    .backImg {
+        position: absolute;
+        top: 100px;
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        filter: blur(150px);
+        z-index: -1;
+        opacity: 0.6;
     }
 }
 .info {
@@ -90,6 +119,34 @@ console.log(props)
             top: -30px;
             font-size: 70px;
         }
+    }
+}
+.trackList {
+    max-width: 860px;
+    margin: 0 auto;
+
+    .list {
+        border-radius: 12px;
+        padding: 10px 20px;
+        margin-bottom: 10px;
+        transition: all 0.3s;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.10);
+        }
+        &:last-child {
+            margin-bottom: 0;
+        }
+        .index, .time {
+            display: inline-block;
+            width: 5%;
+            opacity: 0.5;
+        }
+        .title {
+            display: inline-block;
+            width: 90%;
+        }
+
     }
 }
 </style>
