@@ -7,6 +7,7 @@ import List from '@/views/List.vue'
 import MyPage from '@/views/MyPage.vue'
 import Album from '@/views/Detail/Album.vue'
 import Music from '@/views/Detail/Music.vue'
+import Artist from '@/views/Detail/Artist.vue'
 import MenuList from '@/components/MenuList.vue'
 
 const router = createRouter({
@@ -37,6 +38,7 @@ const router = createRouter({
                         components: {
                             album: Album,
                             music: Music,
+                            artist: Artist,
                         }
                     }
                 ]

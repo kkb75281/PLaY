@@ -191,28 +191,54 @@ let moveToMusicPage = () => {
     showAlbum.value = !showAlbum.value;
 }
 
+let currentRoute = null;
+let checkRoute = (newRoute) => {
+    console.log(currentRoute, newRoute)
+    if(currentRoute == null) {
+        showAlbum.value = true;
+    } else if(currentRoute == newRoute) {
+        showAlbum.value = false;
+        currentRoute = null;
+        router.go(-1);
+    } else if(currentRoute !== newRoute) {
+        showAlbum.value = true;
+        currentRoute = newRoute;
+    }
+}
+
 let showDetail = (e) => {
     showAlbum.value = !showAlbum.value;
 
     if (!showAlbum.value) {
         router.go(-1);
-    }
+    } 
 
     if (e.target.className == 'cover') {
+        currentRoute = '/list/detail?' + selectedAlbum.value.reference.record_id;
         router.push('/list/detail?' + selectedAlbum.value.reference.record_id);
         detail = 'album';
     } else if (e.target.className == 'title' || e.target.className.includes('up')) {
+        currentRoute = '/list/detail?' + selectedAlbum.value.record_id;
         router.push('/list/detail?' + selectedAlbum.value.record_id);
         detail = 'track';
     } else if (e.target.className == 'artist') {
+        currentRoute = '/list/detail?' + selectedAlbum.value.artist;
         router.push('/list/detail?' + selectedAlbum.value.artist);
         detail = 'artist';
     }
+
+    // checkRoute();
 }
 
 if (route.fullPath.includes('detail')) {
     router.go(-1);
 }
+
+// console.log(route.fullPath)
+
+// watch(() => route, (newRoute) => {
+//     checkRoute(newRoute.fullPath);
+// }) 
 </script>
 <style lang="less" scoped>
 #search {

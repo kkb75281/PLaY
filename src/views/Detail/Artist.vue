@@ -1,5 +1,5 @@
 <template lang="pug">
-#artist(ref="artist") ddd
+#artist(ref="artist") artist
 </template>
 
 <script setup>
@@ -17,10 +17,11 @@ import { nextTick, ref } from 'vue';
 
 <style lang="less" scoped>
 #artist {
-    width: 100vw;
-    height: calc(100vh - 88px);
-    background-color: var(--main-color);
-    transition: all 1s;
-    z-index: 99;
+    // width: 100vw;
+    // height: calc(100vh - 88px);
+    // background-color: var(--main-color);
+    // transition: all 1s;
+    // z-index: 99;
+    color: #fff;
 }
 </style>
